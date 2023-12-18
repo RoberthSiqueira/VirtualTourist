@@ -1,10 +1,3 @@
-//
-//  ViewController.swift
-//  VirtualTourist
-//
-//  Created by Roberth Siqueira on 18/12/23.
-//
-
 import UIKit
 
 class ViewController: UIViewController {
