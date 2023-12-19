@@ -1,7 +1,9 @@
 import UIKit
 import MapKit
 
-protocol MapViewDelegate: AnyObject {}
+protocol MapViewDelegate: AnyObject {
+    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String)
+}
 
 final class MapView: UIView {
 
@@ -19,6 +21,11 @@ final class MapView: UIView {
         return activityIndicator
     }()
 
+    private lazy var longPressGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressedAction))
+        return gesture
+    }()
+
     private lazy var mapView: MKMapView = {
         let mapView = MKMapView(frame: .zero)
         mapView.translatesAutoresizingMaskIntoConstraints = false
@@ -30,6 +37,7 @@ final class MapView: UIView {
         mapView.showsCompass = true
         mapView.delegate = self
         mapView.isHidden = true
+        mapView.addGestureRecognizer(longPressGesture)
         return mapView
     }()
 
@@ -38,10 +46,6 @@ final class MapView: UIView {
     func setupView() {
         backgroundColor = .white
         addViewHierarchy()
-    }
-
-    func setupAnnotation(annotation: MKAnnotation) {
-        mapView.addAnnotation(annotation)
     }
 
     func requestingData() {
@@ -53,6 +57,30 @@ final class MapView: UIView {
     func dataRequested() {
         loadingIndicator.stopAnimating()
         mapView.isHidden = false
+    }
+
+    // MARK: Methods
+
+    private func setupAnnotation(with coordinate: CLLocationCoordinate2D) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = coordinate
+        
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        let geoDecoder = CLGeocoder()
+
+        geoDecoder.reverseGeocodeLocation(location) { placemarks, error in
+            if placemarks?.isEmpty == false && error == nil {
+                DispatchQueue.main.async {
+                    let placemark = placemarks?.first
+                    let city: String = placemark?.locality ?? ""
+                    let estate: String = placemark?.administrativeArea ?? ""
+
+                    annotation.title = "\(String(describing: city))" + (!estate.isEmpty ? ", \(estate)" : "")
+                    annotation.subtitle = placemark?.country
+                }
+            }
+        }
+        mapView.addAnnotation(annotation)
     }
 
     // MARK: View
@@ -81,11 +109,18 @@ final class MapView: UIView {
     }
 
     // MARK: - UIActions
+
+    @objc private func longPressedAction(_ sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            let touchPoint = sender.location(in: mapView)
+            let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
+            setupAnnotation(with: coordinate)
+        }
+    }
 }
 
 extension MapView: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-
         let reuseId = "pin"
 
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKMarkerAnnotationView
@@ -95,8 +130,7 @@ extension MapView: MKMapViewDelegate {
             pinView?.canShowCallout = true
             pinView?.markerTintColor = .red
             pinView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-        }
-        else {
+        } else {
             pinView?.annotation = annotation
         }
 
@@ -105,10 +139,9 @@ extension MapView: MKMapViewDelegate {
 
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         if control == view.rightCalloutAccessoryView {
-            let app = UIApplication.shared
-            if let mediaURL = view.annotation?.subtitle {
-                guard let url = URL(string: mediaURL ?? "") else { return }
-                app.open(url)
+            if let annotation = view.annotation,
+                let location = annotation.title ?? "" {
+                delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location)
             }
         }
     }

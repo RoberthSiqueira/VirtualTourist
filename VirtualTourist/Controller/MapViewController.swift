@@ -18,7 +18,7 @@ class MapViewController: UIViewController {
         mapView.delegate = self
         view = mapView
 
-        requestLocation(with: .zero, and: .zero)
+        mapView.dataRequested()
     }
 
     // MARK: - Methods
@@ -27,24 +27,21 @@ class MapViewController: UIViewController {
         navigationItem.title = "Choose a location"
     }
 
-    private func requestLocation(with latitude: Double, and longitude: Double) {
+    private func requestLocation(with latitude: Double, and longitude: Double, from location: String) {
         mapView.requestingData()
+        goToAlbum(title: location)
         mapView.dataRequested()
     }
 
-    private func createAnnotation(latitude: Double, longitude: Double) {
-        var annotations: [MKAnnotation] = []
-
-        let lat = CLLocationDegrees(latitude)
-        let long = CLLocationDegrees(longitude)
-        let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
-
-
-        let annotation = MKPointAnnotation()
-        annotation.coordinate = coordinate
-        annotations.append(annotation)
-        mapView.setupAnnotation(annotation: annotation)
+    private func goToAlbum(title: String) {
+        let photoAlbumVC = PhotoAlbumViewController()
+        photoAlbumVC.title = title
+        navigationController?.pushViewController(photoAlbumVC, animated: true)
     }
 }
 
-extension MapViewController: MapViewDelegate {}
+extension MapViewController: MapViewDelegate {
+    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String) {
+        requestLocation(with: coordinate.latitude, and: coordinate.longitude, from: location)
+    }
+}
