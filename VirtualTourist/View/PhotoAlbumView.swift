@@ -13,13 +13,14 @@ class PhotoAlbumView: UIView {
     private lazy var locationImageView: UIImageView = {
         let imageView = UIImageView(frame: .zero)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleToFill
+        imageView.contentMode = .scaleAspectFill
         return imageView
     }()
 
     private lazy var collectionFlowLayout: UICollectionViewFlowLayout = {
         let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        flowLayout.scrollDirection = .vertical
+        flowLayout.itemSize = CGSize(width: 120, height: 120)
         return flowLayout
     }()
 
@@ -28,7 +29,7 @@ class PhotoAlbumView: UIView {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(PhotoAlbumCell.self, forCellWithReuseIdentifier: "cell")
         return collectionView
     }()
 
@@ -49,6 +50,10 @@ class PhotoAlbumView: UIView {
         addViewHierarchy()
     }
 
+    func reloadPhotos() {
+        albumCollectionView.reloadData()
+    }
+
     // MARK: View
 
     private func addViewHierarchy() {
@@ -65,7 +70,8 @@ class PhotoAlbumView: UIView {
         NSLayoutConstraint.activate([
             locationImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             locationImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            locationImageView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
+            locationImageView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+            locationImageView.heightAnchor.constraint(equalToConstant: 150)
         ])
 
         NSLayoutConstraint.activate([
@@ -97,10 +103,13 @@ extension PhotoAlbumView: UICollectionViewDelegate {
 
 extension PhotoAlbumView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 1
+        return 30
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        return collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? PhotoAlbumCell else {
+            return UICollectionViewCell()
+        }
+        return cell
     }
 }

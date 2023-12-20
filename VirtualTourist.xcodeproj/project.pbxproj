@@ -15,6 +15,7 @@
 		4A8231272B31096F00AD095A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8231262B31096F00AD095A /* MapView.swift */; };
 		4A8231292B311D3E00AD095A /* PhotoAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8231282B311D3E00AD095A /* PhotoAlbumViewController.swift */; };
 		4A82312B2B325F9400AD095A /* PhotoAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82312A2B325F9400AD095A /* PhotoAlbumView.swift */; };
+		4A82312D2B3268FE00AD095A /* PhotoAlbumCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82312C2B3268FE00AD095A /* PhotoAlbumCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		4A8231262B31096F00AD095A /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		4A8231282B311D3E00AD095A /* PhotoAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumViewController.swift; sourceTree = "<group>"; };
 		4A82312A2B325F9400AD095A /* PhotoAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumView.swift; sourceTree = "<group>"; };
+		4A82312C2B3268FE00AD095A /* PhotoAlbumCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAlbumCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			children = (
 				4A8231262B31096F00AD095A /* MapView.swift */,
 				4A82312A2B325F9400AD095A /* PhotoAlbumView.swift */,
+				4A82312C2B3268FE00AD095A /* PhotoAlbumCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -189,6 +192,7 @@
 				4A8231292B311D3E00AD095A /* PhotoAlbumViewController.swift in Sources */,
 				4A8231102B3104A200AD095A /* SceneDelegate.swift in Sources */,
 				4A82312B2B325F9400AD095A /* PhotoAlbumView.swift in Sources */,
+				4A82312D2B3268FE00AD095A /* PhotoAlbumCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
