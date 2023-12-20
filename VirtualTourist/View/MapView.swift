@@ -2,7 +2,7 @@ import UIKit
 import MapKit
 
 protocol MapViewDelegate: AnyObject {
-    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String)
+    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String, image: UIImage)
 }
 
 final class MapView: UIView {
@@ -64,7 +64,7 @@ final class MapView: UIView {
     private func setupAnnotation(with coordinate: CLLocationCoordinate2D) {
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
-        
+
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let geoDecoder = CLGeocoder()
 
@@ -81,6 +81,25 @@ final class MapView: UIView {
             }
         }
         mapView.addAnnotation(annotation)
+    }
+
+    private func setupRegion(with coordinate: CLLocationCoordinate2D) {
+        let metersZoomIn: Double = 100000
+        let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: metersZoomIn, longitudinalMeters: metersZoomIn)
+        mapView.setCenter(coordinate, animated: true)
+        mapView.setRegion(region, animated: true)
+    }
+
+    private func setupImageFromLocation(annotationView: MKAnnotationView) -> UIImage {
+        let mapViewSize = mapView.frame.size
+        let annotationPoint = annotationView.anchorPoint
+
+        let _ = UIGraphicsBeginImageContext(mapViewSize)
+        mapView.drawHierarchy(in: CGRect(origin: annotationPoint, size: CGSize(width: mapViewSize.width, height: 200)), afterScreenUpdates: false)
+        let locationImage: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
+        UIGraphicsEndImageContext()
+
+        return locationImage
     }
 
     // MARK: View
@@ -115,6 +134,7 @@ final class MapView: UIView {
             let touchPoint = sender.location(in: mapView)
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
             setupAnnotation(with: coordinate)
+            setupRegion(with: coordinate)
         }
     }
 }
@@ -141,7 +161,8 @@ extension MapView: MKMapViewDelegate {
         if control == view.rightCalloutAccessoryView {
             if let annotation = view.annotation,
                 let location = annotation.title ?? "" {
-                delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location)
+                let locationImage = setupImageFromLocation(annotationView: view)
+                delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location, image: locationImage)
             }
         }
     }
