@@ -5,6 +5,8 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: - Properties
 
     var locationImage: UIImage?
+    var lat: Double?
+    var long: Double?
     let photoAlbumView = PhotoAlbumView(frame: .zero)
 
     // MARK: - Lifecycle Methods
