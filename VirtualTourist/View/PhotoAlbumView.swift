@@ -14,13 +14,6 @@ class PhotoAlbumView: UIView {
 
     // MARK: - UI
 
-    private lazy var locationImageView: UIImageView = {
-        let imageView = UIImageView(frame: .zero)
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-
     private lazy var noImagesLabel: UILabel = {
         let label = UILabel(frame: .zero)
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -57,9 +50,8 @@ class PhotoAlbumView: UIView {
 
     // MARK: - API
 
-    func setupView(image: UIImage?) {
+    func setupView() {
         backgroundColor = .white
-        locationImageView.image = image
         addViewHierarchy()
     }
 
@@ -85,7 +77,6 @@ class PhotoAlbumView: UIView {
     // MARK: View
 
     private func addViewHierarchy() {
-        addSubview(locationImageView)
         addSubview(albumCollectionView)
         addSubview(noImagesLabel)
         addSubview(newAlbumButton)
@@ -97,14 +88,7 @@ class PhotoAlbumView: UIView {
         let safeArea = safeAreaLayoutGuide
 
         NSLayoutConstraint.activate([
-            locationImageView.topAnchor.constraint(equalTo: safeArea.topAnchor),
-            locationImageView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
-            locationImageView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
-            locationImageView.heightAnchor.constraint(equalToConstant: 150)
-        ])
-
-        NSLayoutConstraint.activate([
-            albumCollectionView.topAnchor.constraint(equalTo: locationImageView.bottomAnchor),
+            albumCollectionView.topAnchor.constraint(equalTo: safeArea.topAnchor),
             albumCollectionView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
             albumCollectionView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor)
         ])

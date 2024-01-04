@@ -27,16 +27,15 @@ class MapViewController: UIViewController {
         navigationItem.title = "Choose a location"
     }
 
-    private func requestLocation(with latitude: Double, and longitude: Double, from location: String, image: UIImage) {
+    private func requestLocation(with latitude: Double, and longitude: Double, from location: String) {
         mapView.requestingData()
-        goToAlbum(title: location, image: image, lat: latitude, long: longitude)
+        goToAlbum(title: location, lat: latitude, long: longitude)
         mapView.dataRequested()
     }
 
-    private func goToAlbum(title: String, image: UIImage, lat: Double, long: Double) {
+    private func goToAlbum(title: String, lat: Double, long: Double) {
         let photoAlbumVC = PhotoAlbumViewController()
         photoAlbumVC.title = title
-        photoAlbumVC.locationImage = image
         photoAlbumVC.lat = lat
         photoAlbumVC.long = long
         navigationController?.pushViewController(photoAlbumVC, animated: true)
@@ -44,7 +43,7 @@ class MapViewController: UIViewController {
 }
 
 extension MapViewController: MapViewDelegate {
-    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String, image: UIImage) {
-        requestLocation(with: coordinate.latitude, and: coordinate.longitude, from: location, image: image)
+    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String) {
+        requestLocation(with: coordinate.latitude, and: coordinate.longitude, from: location)
     }
 }

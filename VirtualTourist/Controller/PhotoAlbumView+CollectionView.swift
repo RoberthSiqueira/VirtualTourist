@@ -2,7 +2,8 @@ import UIKit
 
 extension PhotoAlbumView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("Cell selected")
+        photos.remove(at: indexPath.row)
+        collectionView.deleteItems(at: [indexPath])
     }
 }
 

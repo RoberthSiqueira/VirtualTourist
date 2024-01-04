@@ -2,7 +2,7 @@ import UIKit
 import MapKit
 
 protocol MapViewDelegate: AnyObject {
-    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String, image: UIImage)
+    func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String)
 }
 
 final class MapView: UIView {
@@ -90,18 +90,6 @@ final class MapView: UIView {
         mapView.setRegion(region, animated: true)
     }
 
-    private func setupImageFromLocation(annotationView: MKAnnotationView) -> UIImage {
-        let mapViewSize = mapView.frame.size
-        let annotationPoint = annotationView.anchorPoint
-
-        let _ = UIGraphicsBeginImageContext(mapViewSize)
-        mapView.drawHierarchy(in: CGRect(origin: annotationPoint, size: CGSize(width: mapViewSize.width, height: 200)), afterScreenUpdates: false)
-        let locationImage: UIImage = UIGraphicsGetImageFromCurrentImageContext() ?? UIImage()
-        UIGraphicsEndImageContext()
-
-        return locationImage
-    }
-
     // MARK: View
 
     private func addViewHierarchy() {
@@ -161,8 +149,7 @@ extension MapView: MKMapViewDelegate {
         if control == view.rightCalloutAccessoryView {
             if let annotation = view.annotation,
                 let location = annotation.title ?? "" {
-                let locationImage = setupImageFromLocation(annotationView: view)
-                delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location, image: locationImage)
+                delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location)
             }
         }
     }
