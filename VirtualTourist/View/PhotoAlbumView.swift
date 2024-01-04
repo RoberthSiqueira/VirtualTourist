@@ -6,6 +6,8 @@ class PhotoAlbumView: UIView {
 
     // MARK: - Properties
 
+    private var photos: [Photo] = []
+
     weak var delegate: PhotoAlbumViewDelegate?
 
     // MARK: - UI
@@ -15,6 +17,14 @@ class PhotoAlbumView: UIView {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
         return imageView
+    }()
+
+    private lazy var noImagesLabel: UILabel = {
+        let label = UILabel(frame: .zero)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "No Images"
+        label.isHidden = true
+        return label
     }()
 
     private lazy var collectionFlowLayout: UICollectionViewFlowLayout = {
@@ -50,8 +60,22 @@ class PhotoAlbumView: UIView {
         addViewHierarchy()
     }
 
-    func reloadPhotos() {
+    func reloadPhotos(with photos: [Photo]) {
+        self.photos = photos
         albumCollectionView.reloadData()
+        showCollection(true)
+    }
+
+    func noImagesState() {
+        showCollection(false)
+    }
+
+    // MARK: Methods
+
+    private func showCollection(_ show: Bool) {
+        albumCollectionView.isHidden = !show
+        newAlbumButton.isHidden = !show
+        noImagesLabel.isHidden = show
     }
 
     // MARK: View
@@ -59,6 +83,7 @@ class PhotoAlbumView: UIView {
     private func addViewHierarchy() {
         addSubview(locationImageView)
         addSubview(albumCollectionView)
+        addSubview(noImagesLabel)
         addSubview(newAlbumButton)
 
         setupConstraints()
@@ -86,6 +111,11 @@ class PhotoAlbumView: UIView {
             newAlbumButton.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
             newAlbumButton.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor)
         ])
+
+        NSLayoutConstraint.activate([
+            noImagesLabel.centerXAnchor.constraint(equalTo: albumCollectionView.centerXAnchor),
+            noImagesLabel.centerYAnchor.constraint(equalTo: albumCollectionView.centerYAnchor)
+        ])
     }
 
     // MARK: - UIActions
@@ -103,7 +133,7 @@ extension PhotoAlbumView: UICollectionViewDelegate {
 
 extension PhotoAlbumView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
+        return photos.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
