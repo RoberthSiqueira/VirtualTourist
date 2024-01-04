@@ -57,6 +57,27 @@ class FlickrClient {
         }
     }
 
+    func getPhoto(serverId: String, photoId: String, secret: String, completion: @escaping (Data?, Error?) -> Void) {
+        let task = URLSession.shared.dataTask(with: Endpoints.getPhoto(serverId: serverId, photoId: photoId, secret: secret).url) { data, response, error in
+            guard let data = data else {
+                DispatchQueue.main.async {
+                    completion(nil, NetworkError.badURL)
+                }
+                return
+            }
+            guard error == nil else {
+                DispatchQueue.main.async {
+                    completion(nil, error)
+                }
+                return
+            }
+            DispatchQueue.main.async {
+                completion(data, nil)
+            }
+        }
+        task.resume()
+    }
+
     private func getRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (Result<ResponseType, Error>) -> Void) {
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
             guard let data = data else {
