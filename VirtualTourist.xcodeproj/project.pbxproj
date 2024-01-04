@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4A81BA032B46237400AEF5F1 /* AlbumResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */; };
 		4A82310E2B3104A200AD095A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82310D2B3104A200AD095A /* AppDelegate.swift */; };
 		4A8231102B3104A200AD095A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82310F2B3104A200AD095A /* SceneDelegate.swift */; };
 		4A8231122B3104A200AD095A /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8231112B3104A200AD095A /* MapViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumResponse.swift; sourceTree = "<group>"; };
 		4A82310A2B3104A200AD095A /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A82310D2B3104A200AD095A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A82310F2B3104A200AD095A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +47,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4A81BA012B46235C00AEF5F1 /* Response */ = {
+			isa = PBXGroup;
+			children = (
+				4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */,
+			);
+			path = Response;
+			sourceTree = "<group>";
+		};
 		4A8231012B3104A200AD095A = {
 			isa = PBXGroup;
 			children = (
@@ -123,6 +133,7 @@
 			isa = PBXGroup;
 			children = (
 				4A82312E2B33AD5800AD095A /* FlickrClient.swift */,
+				4A81BA012B46235C00AEF5F1 /* Response */,
 			);
 			path = FlickrClient;
 			sourceTree = "<group>";
@@ -197,6 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4A81BA032B46237400AEF5F1 /* AlbumResponse.swift in Sources */,
 				4A8231122B3104A200AD095A /* MapViewController.swift in Sources */,
 				4A8231272B31096F00AD095A /* MapView.swift in Sources */,
 				4A82310E2B3104A200AD095A /* AppDelegate.swift in Sources */,
