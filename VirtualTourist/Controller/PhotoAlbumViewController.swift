@@ -27,13 +27,14 @@ class PhotoAlbumViewController: UIViewController {
 
     private func fillAlbum() {
         guard let lat = lat, let long = long else { return }
+        flickrClient.getAlbum(lat: lat, long: long, completion: handleGETAlbum(photos:error:))
+    }
 
-        flickrClient.getAlbum(lat: lat, long: long) { [weak self] photos, error in
-            if error == nil {
-                self?.photoAlbumView.reloadPhotos(with: photos)
-            } else {
-                self?.photoAlbumView.noImagesState()
-            }
+    private func handleGETAlbum(photos: [Photo], error: Error?) {
+        if error == nil {
+            photoAlbumView.reloadPhotos(with: photos)
+        } else {
+            photoAlbumView.noImagesState()
         }
     }
 }

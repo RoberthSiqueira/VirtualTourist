@@ -2,6 +2,12 @@ import UIKit
 
 class PhotoAlbumCell: UICollectionViewCell {
 
+    // MARK: Properties
+
+    var photo: Photo?
+
+    private let flickrClient = FlickrClient.shared
+
     // MARK: - UI
 
     private lazy var photoImageView: UIImageView = {
@@ -11,6 +17,8 @@ class PhotoAlbumCell: UICollectionViewCell {
         imageView.image = UIImage(named: "placeholder")
         return imageView
     }()
+
+    // MARK: Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -22,9 +30,30 @@ class PhotoAlbumCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupView() {
+    // MARK: API
 
+    func setupCell(with photo: Photo) {
+        self.photo = photo
+        fillPhoto()
     }
+
+    // MARK: Methods
+
+    private func fillPhoto() {
+        guard let photo = photo else { return }
+        flickrClient.getPhoto(serverId: photo.server, photoId: photo.id, secret: photo.secret, completion: handleFillPhoto(imageData:error:))
+    }
+
+    private func handleFillPhoto(imageData: Data?, error: Error?) {
+        if let imageData = imageData, error == nil {
+            DispatchQueue.main.async {
+                self.photoImageView.image = UIImage(data: imageData)
+                self.setNeedsLayout()
+            }
+        }
+    }
+
+    // MARK: View
 
     private func addViewHierarchy() {
         contentView.addSubview(photoImageView)

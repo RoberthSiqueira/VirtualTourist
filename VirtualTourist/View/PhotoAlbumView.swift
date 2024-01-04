@@ -140,6 +140,11 @@ extension PhotoAlbumView: UICollectionViewDataSource {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as? PhotoAlbumCell else {
             return UICollectionViewCell()
         }
+
+        let photo = photos[indexPath.row]
+
+        cell.setupCell(with: photo)
+
         return cell
     }
 }
