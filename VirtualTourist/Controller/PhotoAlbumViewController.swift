@@ -31,7 +31,7 @@ class PhotoAlbumViewController: UIViewController {
     }
 
     private func handleGETAlbum(photos: [Photo], error: Error?) {
-        if error == nil {
+        if error == nil && !photos.isEmpty {
             photoAlbumView.reloadPhotos(with: photos)
         } else {
             photoAlbumView.noImagesState()
