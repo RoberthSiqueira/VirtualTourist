@@ -3,8 +3,6 @@ import UIKit
 class PhotoAlbumViewController: UIViewController {
 
     // MARK: - Properties
-
-    var locationImage: UIImage?
     var lat: Double?
     var long: Double?
     let photoAlbumView = PhotoAlbumView(frame: .zero)
@@ -16,18 +14,18 @@ class PhotoAlbumViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        photoAlbumView.setupView(image: locationImage)
+        photoAlbumView.setupView()
         photoAlbumView.delegate = self
         view = photoAlbumView
 
-        fillAlbum()
+        fillAlbum(isNewCollection: false)
     }
 
     // MARK: - Methods
 
-    private func fillAlbum() {
+    private func fillAlbum(isNewCollection: Bool) {
         guard let lat = lat, let long = long else { return }
-        flickrClient.getAlbum(lat: lat, long: long, completion: handleGETAlbum(photos:error:))
+        flickrClient.getAlbum(lat: lat, long: long, isNewCollection: isNewCollection, completion: handleGETAlbum(photos:error:))
     }
 
     private func handleGETAlbum(photos: [Photo], error: Error?) {
@@ -39,4 +37,8 @@ class PhotoAlbumViewController: UIViewController {
     }
 }
 
-extension PhotoAlbumViewController: PhotoAlbumViewDelegate {}
+extension PhotoAlbumViewController: PhotoAlbumViewDelegate {
+    func didTapNewAlbum() {
+        fillAlbum(isNewCollection: true)
+    }
+}

@@ -1,6 +1,8 @@
 import UIKit
 
-protocol PhotoAlbumViewDelegate: AnyObject {}
+protocol PhotoAlbumViewDelegate: AnyObject {
+    func didTapNewAlbum()
+}
 
 class PhotoAlbumView: UIView {
 
@@ -49,6 +51,7 @@ class PhotoAlbumView: UIView {
         button.setTitleColor(.systemBlue, for: .normal)
         button.setTitle("New Album", for: .normal)
         button.addTarget(self, action: #selector(newAlbumAction), for: .touchUpInside)
+        button.isEnabled = false
         return button
     }()
 
@@ -64,6 +67,7 @@ class PhotoAlbumView: UIView {
         self.photos = photos
         albumCollectionView.reloadData()
         showCollection(true)
+        newAlbumButton.isEnabled = true
     }
 
     func noImagesState() {
@@ -121,6 +125,6 @@ class PhotoAlbumView: UIView {
     // MARK: - UIActions
 
     @objc private func newAlbumAction(_ sender: UIButton) {
-        print(sender)
+        delegate?.didTapNewAlbum()
     }
 }
