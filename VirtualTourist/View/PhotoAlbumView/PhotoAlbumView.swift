@@ -57,6 +57,7 @@ class PhotoAlbumView: UIView {
 
     func reloadPhotos(with photos: [Photo]) {
         self.photos = photos
+        albumCollectionView.setContentOffset(.zero, animated: true) 
         albumCollectionView.reloadData()
         showCollection(true)
         newAlbumButton.isEnabled = true

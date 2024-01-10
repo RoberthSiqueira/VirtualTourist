@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4A81BA032B46237400AEF5F1 /* AlbumResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */; };
 		4A81BA052B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA042B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift */; };
+		4A81BA092B4F57DE00AEF5F1 /* MapView+MKMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA082B4F57DE00AEF5F1 /* MapView+MKMapView.swift */; };
 		4A82310E2B3104A200AD095A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82310D2B3104A200AD095A /* AppDelegate.swift */; };
 		4A8231102B3104A200AD095A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82310F2B3104A200AD095A /* SceneDelegate.swift */; };
 		4A8231122B3104A200AD095A /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8231112B3104A200AD095A /* MapViewController.swift */; };
@@ -24,6 +25,7 @@
 /* Begin PBXFileReference section */
 		4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumResponse.swift; sourceTree = "<group>"; };
 		4A81BA042B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoAlbumView+CollectionView.swift"; sourceTree = "<group>"; };
+		4A81BA082B4F57DE00AEF5F1 /* MapView+MKMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapView+MKMapView.swift"; sourceTree = "<group>"; };
 		4A82310A2B3104A200AD095A /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A82310D2B3104A200AD095A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4A82310F2B3104A200AD095A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,6 +57,33 @@
 				4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */,
 			);
 			path = Response;
+			sourceTree = "<group>";
+		};
+		4A81BA062B4F57A400AEF5F1 /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				4A8231262B31096F00AD095A /* MapView.swift */,
+				4A81BA082B4F57DE00AEF5F1 /* MapView+MKMapView.swift */,
+			);
+			path = MapView;
+			sourceTree = "<group>";
+		};
+		4A81BA072B4F57B900AEF5F1 /* PhotoAlbumViewController */ = {
+			isa = PBXGroup;
+			children = (
+				4A8231282B311D3E00AD095A /* PhotoAlbumViewController.swift */,
+				4A81BA042B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift */,
+			);
+			path = PhotoAlbumViewController;
+			sourceTree = "<group>";
+		};
+		4A81BA0A2B4F580800AEF5F1 /* PhotoAlbumView */ = {
+			isa = PBXGroup;
+			children = (
+				4A82312A2B325F9400AD095A /* PhotoAlbumView.swift */,
+				4A82312C2B3268FE00AD095A /* PhotoAlbumCell.swift */,
+			);
+			path = PhotoAlbumView;
 			sourceTree = "<group>";
 		};
 		4A8231012B3104A200AD095A = {
@@ -99,8 +128,7 @@
 			isa = PBXGroup;
 			children = (
 				4A8231112B3104A200AD095A /* MapViewController.swift */,
-				4A8231282B311D3E00AD095A /* PhotoAlbumViewController.swift */,
-				4A81BA042B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift */,
+				4A81BA072B4F57B900AEF5F1 /* PhotoAlbumViewController */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -116,9 +144,8 @@
 		4A8231242B31072800AD095A /* View */ = {
 			isa = PBXGroup;
 			children = (
-				4A8231262B31096F00AD095A /* MapView.swift */,
-				4A82312A2B325F9400AD095A /* PhotoAlbumView.swift */,
-				4A82312C2B3268FE00AD095A /* PhotoAlbumCell.swift */,
+				4A81BA062B4F57A400AEF5F1 /* MapView */,
+				4A81BA0A2B4F580800AEF5F1 /* PhotoAlbumView */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -220,6 +247,7 @@
 				4A82312B2B325F9400AD095A /* PhotoAlbumView.swift in Sources */,
 				4A82312D2B3268FE00AD095A /* PhotoAlbumCell.swift in Sources */,
 				4A81BA052B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift in Sources */,
+				4A81BA092B4F57DE00AEF5F1 /* MapView+MKMapView.swift in Sources */,
 				4A82312F2B33AD5800AD095A /* FlickrClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
