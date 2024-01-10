@@ -46,4 +46,8 @@ extension MapViewController: MapViewDelegate {
     func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String) {
         requestLocation(with: coordinate.latitude, and: coordinate.longitude, from: location)
     }
+
+    func persistRegion(_ region: MKCoordinateRegion) {
+        
+    }
 }

@@ -3,6 +3,7 @@ import MapKit
 
 protocol MapViewDelegate: AnyObject {
     func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String)
+    func persistRegion(_ region: MKCoordinateRegion)
 }
 
 final class MapView: UIView {
@@ -10,6 +11,10 @@ final class MapView: UIView {
     // MARK: - Properties
 
     weak var delegate: MapViewDelegate?
+
+    private var currentRegion: MKCoordinateRegion {
+        return mapView.region
+    }
 
     // MARK: - UI
 

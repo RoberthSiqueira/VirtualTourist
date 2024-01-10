@@ -26,4 +26,9 @@ extension MapView: MKMapViewDelegate {
             }
         }
     }
+
+    func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
+        let newRegion = mapView.region
+        delegate?.persistRegion(region)
+    }
 }
