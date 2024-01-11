@@ -40,10 +40,7 @@ class RegionStore {
         }
     }
 
-    func retrive() -> Region {
-        guard let region = region else {
-            fatalError("There is not region to retrive")
-        }
+    func retrive() -> Region? {
         return region
     }
 }

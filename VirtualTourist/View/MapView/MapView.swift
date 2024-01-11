@@ -53,6 +53,11 @@ final class MapView: UIView {
         addViewHierarchy()
     }
 
+    func lastSeen(coordinate: CLLocationCoordinate2D, span: MKCoordinateSpan) {
+        let region = MKCoordinateRegion(center: coordinate, span: span)
+        centerMap(with: region)
+    }
+
     func requestingData() {
         loadingIndicator.startAnimating()
         loadingIndicator.isHidden = false
@@ -88,10 +93,14 @@ final class MapView: UIView {
         mapView.addAnnotation(annotation)
     }
 
-    private func setupRegion(with coordinate: CLLocationCoordinate2D) {
+    private func setupRegioOfAnnotation(with coordinate: CLLocationCoordinate2D) {
         let metersZoomIn: Double = 100000
         let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: metersZoomIn, longitudinalMeters: metersZoomIn)
-        mapView.setCenter(coordinate, animated: true)
+        centerMap(with: region)
+    }
+
+    private func centerMap(with region: MKCoordinateRegion) {
+        mapView.setCenter(region.center, animated: true)
         mapView.setRegion(region, animated: true)
     }
 
@@ -127,7 +136,7 @@ final class MapView: UIView {
             let touchPoint = sender.location(in: mapView)
             let coordinate = mapView.convert(touchPoint, toCoordinateFrom: mapView)
             setupAnnotation(with: coordinate)
-            setupRegion(with: coordinate)
+            setupRegioOfAnnotation(with: coordinate)
         }
     }
 }

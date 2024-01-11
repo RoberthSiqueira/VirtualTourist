@@ -21,6 +21,7 @@ class MapViewController: UIViewController {
         view = mapView
 
         mapView.dataRequested()
+        fillLastPosionViwed()
     }
 
     // MARK: - Methods
@@ -37,6 +38,16 @@ class MapViewController: UIViewController {
             longitudeDelta: region.span.longitudeDelta
         )
         regionStore.save(region: regionToPersistence)
+    }
+
+    private func fillLastPosionViwed() {
+        guard let region = regionStore.retrive() else { return }
+        let coordinate = CLLocationCoordinate2D(latitude: region.latitude, longitude: region.longitude)
+        let span = MKCoordinateSpan(
+            latitudeDelta: region.latitudeDelta,
+            longitudeDelta: region.longitudeDelta
+        )
+        mapView.lastSeen(coordinate: coordinate, span: span)
     }
 
     private func requestLocation(with latitude: Double, and longitude: Double, from location: String) {
