@@ -10,6 +10,7 @@
 		4A81BA032B46237400AEF5F1 /* AlbumResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */; };
 		4A81BA052B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA042B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift */; };
 		4A81BA092B4F57DE00AEF5F1 /* MapView+MKMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA082B4F57DE00AEF5F1 /* MapView+MKMapView.swift */; };
+		4A81BA0C2B4F609200AEF5F1 /* RegionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA0B2B4F609200AEF5F1 /* RegionStore.swift */; };
 		4A81BA0F2B4F69DB00AEF5F1 /* Region.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A81BA0E2B4F69DB00AEF5F1 /* Region.swift */; };
 		4A82310E2B3104A200AD095A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82310D2B3104A200AD095A /* AppDelegate.swift */; };
 		4A8231102B3104A200AD095A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A82310F2B3104A200AD095A /* SceneDelegate.swift */; };
@@ -27,6 +28,7 @@
 		4A81BA022B46237400AEF5F1 /* AlbumResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumResponse.swift; sourceTree = "<group>"; };
 		4A81BA042B4637BA00AEF5F1 /* PhotoAlbumView+CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PhotoAlbumView+CollectionView.swift"; sourceTree = "<group>"; };
 		4A81BA082B4F57DE00AEF5F1 /* MapView+MKMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapView+MKMapView.swift"; sourceTree = "<group>"; };
+		4A81BA0B2B4F609200AEF5F1 /* RegionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegionStore.swift; sourceTree = "<group>"; };
 		4A81BA0E2B4F69DB00AEF5F1 /* Region.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Region.swift; sourceTree = "<group>"; };
 		4A82310A2B3104A200AD095A /* VirtualTourist.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VirtualTourist.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4A82310D2B3104A200AD095A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -91,6 +93,7 @@
 		4A81BA0D2B4F69B200AEF5F1 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				4A81BA0B2B4F609200AEF5F1 /* RegionStore.swift */,
 				4A81BA0E2B4F69DB00AEF5F1 /* Region.swift */,
 			);
 			path = Persistence;
@@ -252,6 +255,7 @@
 				4A81BA032B46237400AEF5F1 /* AlbumResponse.swift in Sources */,
 				4A8231122B3104A200AD095A /* MapViewController.swift in Sources */,
 				4A8231272B31096F00AD095A /* MapView.swift in Sources */,
+				4A81BA0C2B4F609200AEF5F1 /* RegionStore.swift in Sources */,
 				4A82310E2B3104A200AD095A /* AppDelegate.swift in Sources */,
 				4A81BA0F2B4F69DB00AEF5F1 /* Region.swift in Sources */,
 				4A8231292B311D3E00AD095A /* PhotoAlbumViewController.swift in Sources */,
