@@ -7,6 +7,8 @@ class MapViewController: UIViewController {
 
     let mapView = MapView(frame: .zero)
 
+    private let regionStore = RegionStore.shared
+
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
@@ -25,6 +27,16 @@ class MapViewController: UIViewController {
 
     private func setupNavigation() {
         navigationItem.title = "Choose a location"
+    }
+
+    private func persist(_ region: MKCoordinateRegion) {
+        let regionToPersistence = Region(
+            latitude: region.center.latitude,
+            longitude: region.center.longitude,
+            latitudeDelta: region.span.latitudeDelta,
+            longitudeDelta: region.span.longitudeDelta
+        )
+        regionStore.save(region: regionToPersistence)
     }
 
     private func requestLocation(with latitude: Double, and longitude: Double, from location: String) {
@@ -48,6 +60,6 @@ extension MapViewController: MapViewDelegate {
     }
 
     func persistRegion(_ region: MKCoordinateRegion) {
-        
+        persist(region)
     }
 }
