@@ -3,14 +3,13 @@ import Foundation
 class FlickrClient {
 
     static let shared = FlickrClient()
-    private let viewContext = DataController.shared.viewContext
 
     static private let apiKey = "a415b81b6a6ad2d6bfab991869fca866"
 
-    private var currentPage: Int16 = 1
-    private var pages: Int16 = .zero
-    private var perpage: Int16 = .zero
-    private var total: Int16 = .zero
+    private var currentPage: Int = 1
+    private var pages: Int = .zero
+    private var perpage: Int = .zero
+    private var total: Int = .zero
 
     enum Endpoints {
         static let apiKeyParam = "&api_key=\(apiKey)"
@@ -19,7 +18,7 @@ class FlickrClient {
         static let photoBase = "https://live.staticflickr.com"
         static let photoSizeSuffix = "w"
 
-        case getAlbum(lat: Double, lon: Double, page: Int16)
+        case getAlbum(lat: Double, lon: Double, page: Int)
         case getPhoto(serverId: String, photoId: String, secret: String)
 
         var stringValue: String {
@@ -51,11 +50,7 @@ class FlickrClient {
                     self?.perpage = album.photos.perpage
                     self?.total = album.photos.total
 
-                    if let photos = album.photos.photo as? Set<Photo> {
-                        completion(Array(photos), nil)
-                    } else {
-                        fatalError("Unable to parse Photos")
-                    }
+                    completion(album.photos.photo, nil)
                 case .failure(let error):
                     completion([], error)
             }
@@ -92,7 +87,6 @@ class FlickrClient {
                 return
             }
             let decoder = JSONDecoder()
-            decoder.userInfo[CodingUserInfoKey.managedObjectContext] = self.viewContext
             do {
                 let object = try decoder.decode(responseType, from: data)
                 DispatchQueue.main.async {
