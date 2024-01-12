@@ -93,10 +93,20 @@
 		4A81BA0D2B4F69B200AEF5F1 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
+				4A81BA112B50A5C000AEF5F1 /* CoreData */,
+				4A81BA102B50A5B400AEF5F1 /* FileManager */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
+		4A81BA102B50A5B400AEF5F1 /* FileManager */ = {
+			isa = PBXGroup;
+			children = (
 				4A81BA0B2B4F609200AEF5F1 /* RegionStore.swift */,
 				4A81BA0E2B4F69DB00AEF5F1 /* Region.swift */,
 			);
-			path = Persistence;
+			path = FileManager;
+			sourceTree = "<group>";
 			sourceTree = "<group>";
 		};
 		4A8231012B3104A200AD095A = {
