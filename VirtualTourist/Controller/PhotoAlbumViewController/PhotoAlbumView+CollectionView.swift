@@ -18,9 +18,7 @@ extension PhotoAlbumView: UICollectionViewDataSource {
         }
 
         let photo = photos[indexPath.row]
-
         cell.setupCell(with: photo)
-
         return cell
     }
 }

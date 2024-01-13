@@ -8,7 +8,7 @@ extension MapView: MKMapViewDelegate {
 
         if pinView == nil {
             pinView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: reuseId)
-            pinView?.canShowCallout = true
+            pinView?.canShowCallout = false
             pinView?.markerTintColor = .red
             pinView?.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
         } else {
@@ -18,15 +18,12 @@ extension MapView: MKMapViewDelegate {
         return pinView
     }
 
-    func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        if control == view.rightCalloutAccessoryView {
-            if let annotation = view.annotation,
-                let location = annotation.title ?? "" {
-                delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location)
-            }
+    func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
+        if let location = annotation.title {
+            delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location ?? "")
         }
     }
-
+    
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
         let newRegion = mapView.region
         delegate?.persistRegion(newRegion)
