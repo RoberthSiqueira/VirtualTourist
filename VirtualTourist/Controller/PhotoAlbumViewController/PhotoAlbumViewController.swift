@@ -1,13 +1,30 @@
+import CoreData
 import UIKit
 
 class PhotoAlbumViewController: UIViewController {
 
     // MARK: - Properties
-    var lat: Double?
-    var long: Double?
+
+    var pin: Pin
     let photoAlbumView = PhotoAlbumView(frame: .zero)
 
     private let flickrClient = FlickrClient.shared
+
+    private var viewContext = DataController.shared.viewContext
+
+    // MARK: - INIT
+
+    init(pin: Pin) {
+        self.pin = pin
+        viewContext = DataController.shared.viewContext
+
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - Lifecycle Methods
 
@@ -18,10 +35,22 @@ class PhotoAlbumViewController: UIViewController {
         photoAlbumView.delegate = self
         view = photoAlbumView
 
-        fillAlbum(isNewCollection: false)
+        retrieveAlbum()
     }
 
     // MARK: - Methods
+
+    private func retrieveAlbum() {
+        let fetchRequest: NSFetchRequest<PhotoPin> = PhotoPin.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", pin)
+        fetchRequest.sortDescriptors = []
+
+        if let result = try? viewContext.fetch(fetchRequest), !result.isEmpty {
+            photoAlbumView.fillImageDataFromCoreData(with: result)
+        } else {
+            fillAlbum(isNewCollection: false)
+        }
+    }
 
     private func fillAlbum(isNewCollection: Bool) {
         DispatchQueue.global().async {
@@ -52,9 +81,26 @@ class PhotoAlbumViewController: UIViewController {
     private func handlePhoto(photoData: Data?, error: Error?, isLast: Bool) {
         if error == nil, let photo = photoData {
             photoAlbumView.fillImageData(with: photo, isLast: isLast)
+            saveContext(with: photo)
         }
     }
 
+    private func saveContext(with photo: Data?) {
+        guard let imageData = photo else { return }
+
+        let fetchRequest: NSFetchRequest<PhotoPin> = PhotoPin.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "pin == %@", pin)
+        fetchRequest.sortDescriptors = []
+
+        let photoPin = PhotoPin(context: viewContext)
+        photoPin.image = imageData
+        photoPin.pin = pin
+
+        do {
+            try viewContext.save()
+        } catch {
+            print(error)
+        }
 
     }
 }
