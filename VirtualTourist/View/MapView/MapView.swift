@@ -22,7 +22,7 @@ final class MapView: UIView {
         let activityIndicator = UIActivityIndicatorView(frame: .zero)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         activityIndicator.hidesWhenStopped = true
-        activityIndicator.startAnimating()
+        activityIndicator.isHidden = true
         return activityIndicator
     }()
 
@@ -41,7 +41,6 @@ final class MapView: UIView {
         mapView.isMultipleTouchEnabled = true
         mapView.showsCompass = true
         mapView.delegate = self
-        mapView.isHidden = true
         mapView.addGestureRecognizer(longPressGesture)
         return mapView
     }()
@@ -56,6 +55,10 @@ final class MapView: UIView {
     func lastSeen(coordinate: CLLocationCoordinate2D, span: MKCoordinateSpan) {
         let region = MKCoordinateRegion(center: coordinate, span: span)
         centerMap(with: region)
+    }
+
+    func addAnnotations(_ annotations: [MKAnnotation]) {
+        mapView.addAnnotations(annotations)
     }
 
     func requestingData() {

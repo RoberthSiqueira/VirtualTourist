@@ -23,8 +23,8 @@ class MapViewController: UIViewController {
         mapView.delegate = self
         view = mapView
 
-        mapView.dataRequested()
         fillLastPosionViwed()
+        retrievePins()
     }
 
     // MARK: - Methods
@@ -51,6 +51,23 @@ class MapViewController: UIViewController {
             longitudeDelta: region.longitudeDelta
         )
         mapView.lastSeen(coordinate: coordinate, span: span)
+    }
+
+    private func retrievePins() {
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+
+        if let result = try? viewContext.fetch(fetchRequest), !result.isEmpty {
+            var annotations: [MKAnnotation] = []
+
+            for pin in result {
+                let annotation = MKPointAnnotation()
+                let coordinate = CLLocationCoordinate2D(latitude: pin.latitude, longitude: pin.longitude)
+                annotation.coordinate = coordinate
+                annotations.append(annotation)
+            }
+            
+            mapView.addAnnotations(annotations)
+        }
     }
 
     private func handleTapAnnotation(with coordinate: CLLocationCoordinate2D, from location: String) {
