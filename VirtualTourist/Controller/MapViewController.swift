@@ -1,5 +1,6 @@
-import UIKit
+import CoreData
 import MapKit
+import UIKit
 
 class MapViewController: UIViewController {
 
@@ -8,6 +9,8 @@ class MapViewController: UIViewController {
     let mapView = MapView(frame: .zero)
 
     private let regionStore = RegionStore.shared
+
+    private var viewContext = DataController.shared.viewContext
 
     // MARK: - Lifecycle Methods
 
@@ -50,24 +53,50 @@ class MapViewController: UIViewController {
         mapView.lastSeen(coordinate: coordinate, span: span)
     }
 
-    private func requestLocation(with latitude: Double, and longitude: Double, from location: String) {
+    private func handleTapAnnotation(with coordinate: CLLocationCoordinate2D, from location: String) {
         mapView.requestingData()
-        goToAlbum(title: location, lat: latitude, long: longitude)
+
+        let pin = createPin(coordinate: coordinate)
+        goToAlbum(title: location, pin: pin)
+        saveContext()
+
         mapView.dataRequested()
     }
 
-    private func goToAlbum(title: String, lat: Double, long: Double) {
-        let photoAlbumVC = PhotoAlbumViewController()
+    private func createPin(coordinate: CLLocationCoordinate2D) -> Pin {
+
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        let predicate = NSPredicate(format: "latitude == %@ AND longitude == %@", argumentArray: [coordinate.latitude, coordinate.longitude])
+        fetchRequest.predicate = predicate
+
+        if let result = try? viewContext.fetch(fetchRequest), let pin = result.first {
+            return pin
+        } else {
+            let pin = Pin(context: viewContext)
+            pin.latitude = coordinate.latitude
+            pin.longitude = coordinate.longitude
+            return pin
+        }
+    }
+
+    private func goToAlbum(title: String, pin: Pin) {
+        let photoAlbumVC = PhotoAlbumViewController(pin: pin)
         photoAlbumVC.title = title
-        photoAlbumVC.lat = lat
-        photoAlbumVC.long = long
         navigationController?.pushViewController(photoAlbumVC, animated: true)
+    }
+
+    private func saveContext() {
+        do {
+            try viewContext.save()
+        } catch {
+            print(error)
+        }
     }
 }
 
 extension MapViewController: MapViewDelegate {
     func didTapOnAnnotation(with coordinate: CLLocationCoordinate2D, from location: String) {
-        requestLocation(with: coordinate.latitude, and: coordinate.longitude, from: location)
+        handleTapAnnotation(with: coordinate, from: location)
     }
 
     func persistRegion(_ region: MKCoordinateRegion) {
