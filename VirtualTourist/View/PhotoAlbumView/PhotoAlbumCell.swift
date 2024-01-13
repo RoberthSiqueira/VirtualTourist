@@ -4,7 +4,7 @@ class PhotoAlbumCell: UICollectionViewCell {
 
     // MARK: Properties
 
-    var photo: Photo?
+    var photo: Data?
 
     private let flickrClient = FlickrClient.shared
 
@@ -32,7 +32,7 @@ class PhotoAlbumCell: UICollectionViewCell {
 
     // MARK: API
 
-    func setupCell(with photo: Photo) {
+    func setupCell(with photo: Data) {
         self.photo = photo
         fillPhoto()
     }
@@ -40,12 +40,7 @@ class PhotoAlbumCell: UICollectionViewCell {
     // MARK: Methods
 
     private func fillPhoto() {
-        guard let photo = photo else { return }
-        flickrClient.getPhoto(serverId: photo.server, photoId: photo.id, secret: photo.secret, completion: handleFillPhoto(imageData:error:))
-    }
-
-    private func handleFillPhoto(imageData: Data?, error: Error?) {
-        if let imageData = imageData, error == nil {
+        if let imageData = photo {
             DispatchQueue.main.async {
                 self.photoImageView.image = UIImage(data: imageData)
                 self.setNeedsLayout()

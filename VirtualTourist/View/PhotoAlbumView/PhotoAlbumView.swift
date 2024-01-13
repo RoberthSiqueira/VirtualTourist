@@ -8,7 +8,7 @@ class PhotoAlbumView: UIView {
 
     // MARK: - Properties
 
-    var photos: [Photo] = []
+    var photos: [Data] = []
 
     weak var delegate: PhotoAlbumViewDelegate?
 
@@ -55,12 +55,18 @@ class PhotoAlbumView: UIView {
         addViewHierarchy()
     }
 
-    func reloadPhotos(with photos: [Photo]) {
-        self.photos = photos
-        albumCollectionView.setContentOffset(.zero, animated: true) 
-        albumCollectionView.reloadData()
-        showCollection(true)
-        newAlbumButton.isEnabled = true
+    func fillImageData(with photo: Data, isLast: Bool) {
+        photos.append(photo)
+        guard isLast else { return }
+        reloadPhotos()
+    }
+
+    func fillImageDataFromCoreData(with photos: [PhotoPin]) {
+        photos.forEach { photoPin in
+            guard let imageData = photoPin.image else { return }
+            self.photos.append(imageData)
+        }
+        reloadPhotos()
     }
 
     func noImagesState() {
@@ -73,6 +79,13 @@ class PhotoAlbumView: UIView {
         albumCollectionView.isHidden = !show
         newAlbumButton.isHidden = !show
         noImagesLabel.isHidden = show
+    }
+
+    private func reloadPhotos() {
+        albumCollectionView.setContentOffset(.zero, animated: true)
+        albumCollectionView.reloadData()
+        showCollection(true)
+        newAlbumButton.isEnabled = true
     }
 
     // MARK: View

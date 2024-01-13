@@ -24,16 +24,38 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: - Methods
 
     private func fillAlbum(isNewCollection: Bool) {
-        guard let lat = lat, let long = long else { return }
-        flickrClient.getAlbum(lat: lat, long: long, isNewCollection: isNewCollection, completion: handleGETAlbum(photos:error:))
+        DispatchQueue.global().async {
+            self.flickrClient.getAlbum(
+                lat: self.pin.latitude,
+                long: self.pin.longitude,
+                isNewCollection: isNewCollection
+            ) { [weak self] photos, error in
+                if error == nil && !photos.isEmpty {
+                    for (index, photo) in photos.enumerated() {
+                        let isLast = (index + 1) == photos.count
+                        self?.fillPhotosImages(with: photo, isLast: isLast)
+                    }
+                } else {
+                    self?.photoAlbumView.noImagesState()
+                }
+            }
+        }
     }
 
-    private func handleGETAlbum(photos: [Photo], error: Error?) {
-        if error == nil && !photos.isEmpty {
-            photoAlbumView.reloadPhotos(with: photos)
-        } else {
-            photoAlbumView.noImagesState()
+    private func fillPhotosImages(with photo: Photo, isLast: Bool) {
+        flickrClient.getPhoto(serverId: photo.server, photoId: photo.id, secret: photo.secret) { [weak self] data, error in
+            self?.handlePhoto(photoData: data, error: error, isLast: isLast)
         }
+
+    }
+
+    private func handlePhoto(photoData: Data?, error: Error?, isLast: Bool) {
+        if error == nil, let photo = photoData {
+            photoAlbumView.fillImageData(with: photo, isLast: isLast)
+        }
+    }
+
+
     }
 }
 
