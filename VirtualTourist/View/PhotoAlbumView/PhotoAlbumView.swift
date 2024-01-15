@@ -2,6 +2,7 @@ import UIKit
 
 protocol PhotoAlbumViewDelegate: AnyObject {
     func didTapNewAlbum()
+    func didTapPhotoToDelete(from indexPath: IndexPath)
 }
 
 class PhotoAlbumView: UIView {

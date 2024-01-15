@@ -12,6 +12,8 @@ class PhotoAlbumViewController: UIViewController {
 
     private var viewContext = DataController.shared.viewContext
 
+    private var fetchedResultsController: NSFetchedResultsController<PhotoPin>?
+
     // MARK: - INIT
 
     init(pin: Pin) {
@@ -19,6 +21,8 @@ class PhotoAlbumViewController: UIViewController {
         viewContext = DataController.shared.viewContext
 
         super.init(nibName: nil, bundle: nil)
+        
+        setupFetchedResultsViewController()
     }
 
     @available(*, unavailable)
@@ -38,14 +42,36 @@ class PhotoAlbumViewController: UIViewController {
         retrieveAlbum()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        fetchedResultsController = nil
+    }
+
     // MARK: - Methods
 
-    private func retrieveAlbum() {
+    private func setupFetchedResultsViewController() {
         let fetchRequest: NSFetchRequest<PhotoPin> = PhotoPin.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "pin == %@", pin)
         fetchRequest.sortDescriptors = []
 
-        if let result = try? viewContext.fetch(fetchRequest), !result.isEmpty {
+        fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: viewContext,
+            sectionNameKeyPath: nil,
+            cacheName: nil
+        )
+
+        fetchedResultsController?.delegate = self
+
+        do {
+            try fetchedResultsController?.performFetch()
+        } catch {
+            fatalError(error.localizedDescription)
+        }
+    }
+
+    private func retrieveAlbum() {
+        if let result = fetchedResultsController?.fetchedObjects, !result.isEmpty {
             photoAlbumView.fillImageDataFromCoreData(with: result)
         } else {
             fillAlbum(isNewCollection: false)
@@ -88,10 +114,6 @@ class PhotoAlbumViewController: UIViewController {
     private func saveContext(with photo: Data?) {
         guard let imageData = photo else { return }
 
-        let fetchRequest: NSFetchRequest<PhotoPin> = PhotoPin.fetchRequest()
-        fetchRequest.predicate = NSPredicate(format: "pin == %@", pin)
-        fetchRequest.sortDescriptors = []
-
         let photoPin = PhotoPin(context: viewContext)
         photoPin.image = imageData
         photoPin.pin = pin
@@ -103,10 +125,33 @@ class PhotoAlbumViewController: UIViewController {
         }
 
     }
+
+    private func deleteAllPhotosPin() {
+        if let results = fetchedResultsController?.fetchedObjects {
+            results.forEach{ viewContext.delete($0) }
+            viewContext.refreshAllObjects()
+            
+            do {
+                try viewContext.save()
+            } catch {
+                print(error)
+            }
+        }
+    }
 }
 
 extension PhotoAlbumViewController: PhotoAlbumViewDelegate {
     func didTapNewAlbum() {
+        deleteAllPhotosPin()
         fillAlbum(isNewCollection: true)
     }
+
+    func didTapPhotoToDelete(from indexPath: IndexPath) {
+        if let photoToDelete = fetchedResultsController?.object(at: indexPath) {
+            viewContext.delete(photoToDelete)
+            try? viewContext.save()
+        }
+    }
 }
+
+extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {}

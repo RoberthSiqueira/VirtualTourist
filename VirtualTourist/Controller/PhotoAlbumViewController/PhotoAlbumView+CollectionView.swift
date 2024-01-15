@@ -4,6 +4,7 @@ extension PhotoAlbumView: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         photos.remove(at: indexPath.row)
         collectionView.deleteItems(at: [indexPath])
+        delegate?.didTapPhotoToDelete(from: indexPath)
     }
 }
 

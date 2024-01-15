@@ -21,6 +21,7 @@ extension MapView: MKMapViewDelegate {
     func mapView(_ mapView: MKMapView, didSelect annotation: MKAnnotation) {
         if let location = annotation.title {
             delegate?.didTapOnAnnotation(with: annotation.coordinate, from: location ?? "")
+            mapView.deselectAnnotation(annotation, animated: false)
         }
     }
     
