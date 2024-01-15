@@ -18,14 +18,6 @@ final class MapView: UIView {
 
     // MARK: - UI
 
-    private lazy var loadingIndicator: UIActivityIndicatorView = {
-        let activityIndicator = UIActivityIndicatorView(frame: .zero)
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.isHidden = true
-        return activityIndicator
-    }()
-
     private lazy var longPressGesture: UILongPressGestureRecognizer = {
         let gesture = UILongPressGestureRecognizer(target: self, action: #selector(longPressedAction))
         return gesture
@@ -59,17 +51,6 @@ final class MapView: UIView {
 
     func addAnnotations(_ annotations: [MKAnnotation]) {
         mapView.addAnnotations(annotations)
-    }
-
-    func requestingData() {
-        loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
-        mapView.isHidden = true
-    }
-
-    func dataRequested() {
-        loadingIndicator.stopAnimating()
-        mapView.isHidden = false
     }
 
     // MARK: Methods
@@ -110,7 +91,6 @@ final class MapView: UIView {
     // MARK: View
 
     private func addViewHierarchy() {
-        addSubview(loadingIndicator)
         addSubview(mapView)
 
         setupConstraints()
@@ -118,11 +98,6 @@ final class MapView: UIView {
 
     private func setupConstraints() {
         let safeArea = safeAreaLayoutGuide
-
-        NSLayoutConstraint.activate([
-            loadingIndicator.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
-            loadingIndicator.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
-        ])
 
         NSLayoutConstraint.activate([
             mapView.topAnchor.constraint(equalTo: safeArea.topAnchor),

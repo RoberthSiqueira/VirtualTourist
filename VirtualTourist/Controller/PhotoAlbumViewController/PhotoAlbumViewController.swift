@@ -79,21 +79,24 @@ class PhotoAlbumViewController: UIViewController {
     }
 
     private func fillAlbum(isNewCollection: Bool) {
-        DispatchQueue.global().async {
-            self.flickrClient.getAlbum(
-                lat: self.pin.latitude,
-                long: self.pin.longitude,
-                isNewCollection: isNewCollection
-            ) { [weak self] photos, error in
-                if error == nil && !photos.isEmpty {
-                    for (index, photo) in photos.enumerated() {
-                        let isLast = (index + 1) == photos.count
-                        self?.fillPhotosImages(with: photo, isLast: isLast)
-                    }
-                } else {
-                    self?.photoAlbumView.noImagesState()
-                }
+        photoAlbumView.requestingData()
+
+        self.flickrClient.getAlbum(
+            lat: pin.latitude,
+            long: pin.longitude,
+            isNewCollection: isNewCollection,
+            completion: handleFillAlbum(with:error:)
+        )
+    }
+
+    private func handleFillAlbum(with photos: [Photo], error: Error?) {
+        if error == nil && !photos.isEmpty {
+            for (index, photo) in photos.enumerated() {
+                let isLast = (index + 1) == photos.count
+                fillPhotosImages(with: photo, isLast: isLast)
             }
+        } else {
+            photoAlbumView.noImagesState()
         }
     }
 
@@ -126,7 +129,7 @@ class PhotoAlbumViewController: UIViewController {
 
     }
 
-    private func deleteAllPhotosPin() {
+    private func deleteAllPhotosPin(completion: @escaping () -> Void) {
         if let results = fetchedResultsController?.fetchedObjects {
             results.forEach{ viewContext.delete($0) }
             viewContext.refreshAllObjects()
@@ -142,8 +145,9 @@ class PhotoAlbumViewController: UIViewController {
 
 extension PhotoAlbumViewController: PhotoAlbumViewDelegate {
     func didTapNewAlbum() {
-        deleteAllPhotosPin()
-        fillAlbum(isNewCollection: true)
+        deleteAllPhotosPin { [weak self] in
+            self?.fillAlbum(isNewCollection: true)
+        }
     }
 
     func didTapPhotoToDelete(from indexPath: IndexPath) {

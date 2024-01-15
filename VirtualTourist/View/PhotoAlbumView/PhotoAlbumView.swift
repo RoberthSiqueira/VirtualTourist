@@ -23,6 +23,14 @@ class PhotoAlbumView: UIView {
         return label
     }()
 
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let activityIndicator = UIActivityIndicatorView(frame: .zero)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.isHidden = true
+        return activityIndicator
+    }()
+
     private lazy var collectionFlowLayout: UICollectionViewFlowLayout = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .vertical
@@ -56,13 +64,21 @@ class PhotoAlbumView: UIView {
         addViewHierarchy()
     }
 
+    func requestingData() {
+        loadingIndicator.startAnimating()
+        loadingIndicator.isHidden = false
+    }
+
     func fillImageData(with photo: Data, isLast: Bool) {
         photos.append(photo)
         guard isLast else { return }
         reloadPhotos()
+        dataRetrieved()
     }
 
     func fillImageDataFromCoreData(with photos: [PhotoPin]) {
+        self.photos.removeAll()
+
         photos.forEach { photoPin in
             guard let imageData = photoPin.image else { return }
             self.photos.append(imageData)
@@ -80,6 +96,11 @@ class PhotoAlbumView: UIView {
         albumCollectionView.isHidden = !show
         newAlbumButton.isHidden = !show
         noImagesLabel.isHidden = show
+        loadingIndicator.isHidden = show
+    }
+
+    private func dataRetrieved() {
+        loadingIndicator.stopAnimating()
     }
 
     private func reloadPhotos() {
@@ -95,6 +116,7 @@ class PhotoAlbumView: UIView {
         addSubview(albumCollectionView)
         addSubview(noImagesLabel)
         addSubview(newAlbumButton)
+        addSubview(loadingIndicator)
 
         setupConstraints()
     }
@@ -118,6 +140,11 @@ class PhotoAlbumView: UIView {
         NSLayoutConstraint.activate([
             noImagesLabel.centerXAnchor.constraint(equalTo: albumCollectionView.centerXAnchor),
             noImagesLabel.centerYAnchor.constraint(equalTo: albumCollectionView.centerYAnchor)
+        ])
+
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: safeArea.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: safeArea.centerYAnchor)
         ])
     }
 

@@ -71,13 +71,9 @@ class MapViewController: UIViewController {
     }
 
     private func handleTapAnnotation(with coordinate: CLLocationCoordinate2D, from location: String) {
-        mapView.requestingData()
-
         let pin = createPin(coordinate: coordinate)
         goToAlbum(title: location, pin: pin)
         saveContext()
-
-        mapView.dataRequested()
     }
 
     private func createPin(coordinate: CLLocationCoordinate2D) -> Pin {
