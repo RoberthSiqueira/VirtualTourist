@@ -12,11 +12,11 @@ class FlickrClient {
     private var total: Int = .zero
 
     enum Endpoints {
-        static let apiKeyParam = "&api_key=\(apiKey)"
-        static let photosPerPage = 30
+        static private let apiKeyParam = "&api_key=\(apiKey)"
+        static private let photosPerPage = 30
 
-        static let photoBase = "https://live.staticflickr.com"
-        static let photoSizeSuffix = "w"
+        static private let photoBase = "https://live.staticflickr.com"
+        static private let photoSizeSuffix = "w"
 
         case getAlbum(lat: Double, lon: Double, page: Int)
         case getPhoto(serverId: String, photoId: String, secret: String)
@@ -55,27 +55,6 @@ class FlickrClient {
                     completion([], error)
             }
         }
-    }
-
-    func getPhoto(serverId: String, photoId: String, secret: String, completion: @escaping (Data?, Error?) -> Void) {
-        let task = URLSession.shared.dataTask(with: Endpoints.getPhoto(serverId: serverId, photoId: photoId, secret: secret).url) { data, response, error in
-            guard let data = data else {
-                DispatchQueue.main.async {
-                    completion(nil, NetworkError.badURL)
-                }
-                return
-            }
-            guard error == nil else {
-                DispatchQueue.main.async {
-                    completion(nil, error)
-                }
-                return
-            }
-            DispatchQueue.main.async {
-                completion(data, nil)
-            }
-        }
-        task.resume()
     }
 
     private func getRequest<ResponseType: Decodable>(url: URL, responseType: ResponseType.Type, completion: @escaping (Result<ResponseType, Error>) -> Void) {
