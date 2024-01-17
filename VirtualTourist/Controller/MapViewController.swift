@@ -10,8 +10,6 @@ class MapViewController: UIViewController {
 
     private let regionStore = RegionStore.shared
 
-    private var viewContext = DataController.shared.viewContext
-
     // MARK: - Lifecycle Methods
 
     override func viewDidLoad() {
@@ -56,7 +54,7 @@ class MapViewController: UIViewController {
     private func retrievePins() {
         let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
 
-        if let result = try? viewContext.fetch(fetchRequest), !result.isEmpty {
+        if let result = try? DataController.shared.viewContext.fetch(fetchRequest), !result.isEmpty {
             var annotations: [MKAnnotation] = []
 
             for pin in result {
@@ -82,10 +80,10 @@ class MapViewController: UIViewController {
         let predicate = NSPredicate(format: "latitude == %@ AND longitude == %@", argumentArray: [coordinate.latitude, coordinate.longitude])
         fetchRequest.predicate = predicate
 
-        if let result = try? viewContext.fetch(fetchRequest), let pin = result.first {
+        if let result = try? DataController.shared.viewContext.fetch(fetchRequest), let pin = result.first {
             return pin
         } else {
-            let pin = Pin(context: viewContext)
+            let pin = Pin(context: DataController.shared.viewContext)
             pin.latitude = coordinate.latitude
             pin.longitude = coordinate.longitude
             return pin
@@ -100,7 +98,7 @@ class MapViewController: UIViewController {
 
     private func saveContext() {
         do {
-            try viewContext.save()
+            try DataController.shared.viewContext.save()
         } catch {
             print(error)
         }

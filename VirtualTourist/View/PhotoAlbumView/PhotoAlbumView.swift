@@ -9,8 +9,6 @@ class PhotoAlbumView: UIView {
 
     // MARK: - Properties
 
-    var photos: [Data] = []
-
     weak var delegate: PhotoAlbumViewDelegate?
 
     // MARK: - UI
@@ -43,7 +41,7 @@ class PhotoAlbumView: UIView {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(PhotoAlbumCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.register(PhotoAlbumCell.self, forCellWithReuseIdentifier: "PhotoAlbumCell")
         return collectionView
     }()
 

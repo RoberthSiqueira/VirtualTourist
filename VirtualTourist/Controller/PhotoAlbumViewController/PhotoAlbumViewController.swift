@@ -6,11 +6,8 @@ class PhotoAlbumViewController: UIViewController {
     // MARK: - Properties
 
     var pin: Pin
+
     let photoAlbumView = PhotoAlbumView(frame: .zero)
-
-    private let flickrClient = FlickrClient.shared
-
-    private var viewContext = DataController.shared.viewContext
 
     private var fetchedResultsController: NSFetchedResultsController<PhotoPin>?
 
@@ -18,7 +15,6 @@ class PhotoAlbumViewController: UIViewController {
 
     init(pin: Pin) {
         self.pin = pin
-        viewContext = DataController.shared.viewContext
 
         super.init(nibName: nil, bundle: nil)
         
@@ -56,7 +52,7 @@ class PhotoAlbumViewController: UIViewController {
 
         fetchedResultsController = NSFetchedResultsController(
             fetchRequest: fetchRequest,
-            managedObjectContext: viewContext,
+            managedObjectContext: DataController.shared.viewContext,
             sectionNameKeyPath: nil,
             cacheName: nil
         )
@@ -81,7 +77,7 @@ class PhotoAlbumViewController: UIViewController {
     private func fillAlbum(isNewCollection: Bool) {
         photoAlbumView.requestingData()
 
-        self.flickrClient.getAlbum(
+        FlickrClient.shared.getAlbum(
             lat: pin.latitude,
             long: pin.longitude,
             isNewCollection: isNewCollection,
@@ -100,29 +96,10 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
 
-    private func fillPhotosImages(with photo: Photo, isLast: Bool) {
-        flickrClient.getPhoto(serverId: photo.server, photoId: photo.id, secret: photo.secret) { [weak self] data, error in
-            self?.handlePhoto(photoData: data, error: error, isLast: isLast)
-        }
 
-    }
-
-    private func handlePhoto(photoData: Data?, error: Error?, isLast: Bool) {
-        if error == nil, let photo = photoData {
-            photoAlbumView.fillImageData(with: photo, isLast: isLast)
-            saveContext(with: photo)
-        }
-    }
-
-    private func saveContext(with photo: Data?) {
-        guard let imageData = photo else { return }
-
-        let photoPin = PhotoPin(context: viewContext)
-        photoPin.image = imageData
-        photoPin.pin = pin
-
+    private func saveContext() {
         do {
-            try viewContext.save()
+            try DataController.shared.viewContext.save()
         } catch {
             print(error)
         }
@@ -152,8 +129,8 @@ extension PhotoAlbumViewController: PhotoAlbumViewDelegate {
 
     func didTapPhotoToDelete(from indexPath: IndexPath) {
         if let photoToDelete = fetchedResultsController?.object(at: indexPath) {
-            viewContext.delete(photoToDelete)
-            try? viewContext.save()
+            DataController.shared.viewContext.delete(photoToDelete)
+            saveContext()
         }
     }
 }

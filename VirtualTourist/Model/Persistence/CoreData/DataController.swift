@@ -7,7 +7,7 @@ class DataController {
 
     // MARK: Properties
 
-    let persistendContainer: NSPersistentContainer
+    private let persistendContainer: NSPersistentContainer
 
     var viewContext: NSManagedObjectContext {
         return persistendContainer.viewContext

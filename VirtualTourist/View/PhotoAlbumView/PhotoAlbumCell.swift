@@ -2,12 +2,6 @@ import UIKit
 
 class PhotoAlbumCell: UICollectionViewCell {
 
-    // MARK: Properties
-
-    var photo: Data?
-
-    private let flickrClient = FlickrClient.shared
-
     // MARK: - UI
 
     private lazy var photoImageView: UIImageView = {
@@ -32,19 +26,10 @@ class PhotoAlbumCell: UICollectionViewCell {
 
     // MARK: API
 
-    func setupCell(with photo: Data) {
-        self.photo = photo
-        fillPhoto()
-    }
-
-    // MARK: Methods
-
-    private func fillPhoto() {
-        if let imageData = photo {
-            DispatchQueue.main.async {
-                self.photoImageView.image = UIImage(data: imageData)
-                self.setNeedsLayout()
-            }
+    func setupCellImage(_ image: UIImage) {
+        DispatchQueue.main.async {
+            self.photoImageView.image = image
+            self.setNeedsLayout()
         }
     }
 
