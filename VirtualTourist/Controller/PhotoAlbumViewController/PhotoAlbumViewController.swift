@@ -87,10 +87,18 @@ class PhotoAlbumViewController: UIViewController {
 
     private func handleFillAlbum(with photos: [Photo], error: Error?) {
         if error == nil && !photos.isEmpty {
-            for (index, photo) in photos.enumerated() {
-                let isLast = (index + 1) == photos.count
-                fillPhotosImages(with: photo, isLast: isLast)
+
+            var photosPin: [PhotoPin] = []
+
+            for photo in photos {
+                let photoPin = PhotoPin(context: DataController.shared.viewContext)
+                photoPin.pin = pin
+                photoPin.imageURL = FlickrClient.Endpoints.getPhoto(serverId: photo.server, photoId: photo.id, secret: photo.secret).url
+                photosPin.append(photoPin)
             }
+            
+            saveContext()
+            photoAlbumView.fillImageDataFromCoreData(with: photosPin)
         } else {
             photoAlbumView.noImagesState()
         }
@@ -133,6 +141,27 @@ extension PhotoAlbumViewController: PhotoAlbumViewDelegate {
             saveContext()
         }
     }
+
+    func itemsOnSections() -> Int {
+        if let sections = fetchedResultsController?.fetchedObjects?.count {
+            return sections
+        }
+        return 0
+    }
+
+    func setupCell(_ cell: PhotoAlbumCell, indexPath: IndexPath) {
+        if let photoPin = fetchedResultsController?.object(at: indexPath),
+            let url = photoPin.imageURL {
+
+            DispatchQueue.global().async {
+                if let imageData = try? Data(contentsOf: url) {
+                    photoPin.image =  imageData
+                    let image = UIImage(data: imageData) ?? UIImage()
+                    cell.setupCellImage(image)
+                }
+            }
+            saveContext()
+        }
+    }
 }
 
-extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {}

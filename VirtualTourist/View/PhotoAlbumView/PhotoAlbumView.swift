@@ -3,6 +3,8 @@ import UIKit
 protocol PhotoAlbumViewDelegate: AnyObject {
     func didTapNewAlbum()
     func didTapPhotoToDelete(from indexPath: IndexPath)
+    func itemsOnSections() -> Int
+    func setupCell(_ cell: PhotoAlbumCell, indexPath: IndexPath)
 }
 
 class PhotoAlbumView: UIView {
@@ -64,14 +66,13 @@ class PhotoAlbumView: UIView {
 
     func requestingData() {
         loadingIndicator.startAnimating()
-        loadingIndicator.isHidden = false
     }
 
-    func fillImageData(with photo: Data, isLast: Bool) {
-        photos.append(photo)
-        guard isLast else { return }
-        reloadPhotos()
-        dataRetrieved()
+    func fillImageDataFromCoreData(with photosPin: [PhotoPin]) {
+        albumCollectionView.reloadData()
+        showCollection(true)
+        newAlbumButton.isEnabled = true
+        retriviedData()
     }
 
     func fillImageDataFromCoreData(with photos: [PhotoPin]) {
@@ -85,6 +86,7 @@ class PhotoAlbumView: UIView {
     }
 
     func noImagesState() {
+        retriviedData()
         showCollection(false)
     }
 
@@ -97,15 +99,8 @@ class PhotoAlbumView: UIView {
         loadingIndicator.isHidden = show
     }
 
-    private func dataRetrieved() {
+    private func retriviedData() {
         loadingIndicator.stopAnimating()
-    }
-
-    private func reloadPhotos() {
-        albumCollectionView.setContentOffset(.zero, animated: true)
-        albumCollectionView.reloadData()
-        showCollection(true)
-        newAlbumButton.isEnabled = true
     }
 
     // MARK: View
