@@ -75,14 +75,8 @@ class PhotoAlbumView: UIView {
         retriviedData()
     }
 
-    func fillImageDataFromCoreData(with photos: [PhotoPin]) {
-        self.photos.removeAll()
-
-        photos.forEach { photoPin in
-            guard let imageData = photoPin.image else { return }
-            self.photos.append(imageData)
-        }
-        reloadPhotos()
+    func deletePhotoOnCollection(indexPath: IndexPath) {
+        albumCollectionView.deleteItems(at: [indexPath])
     }
 
     func noImagesState() {
@@ -96,7 +90,6 @@ class PhotoAlbumView: UIView {
         albumCollectionView.isHidden = !show
         newAlbumButton.isHidden = !show
         noImagesLabel.isHidden = show
-        loadingIndicator.isHidden = show
     }
 
     private func retriviedData() {

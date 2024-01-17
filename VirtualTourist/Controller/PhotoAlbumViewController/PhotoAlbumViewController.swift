@@ -104,26 +104,21 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
 
+    private func deleteAllPhotosPin(completion: @escaping () -> Void) {
+        if let results = fetchedResultsController?.fetchedObjects {
+            for photoToDelete in results {
+                DataController.shared.viewContext.delete(photoToDelete)
+                saveContext()
+            }
+        }
+        completion()
+    }
 
     private func saveContext() {
         do {
             try DataController.shared.viewContext.save()
         } catch {
             print(error)
-        }
-
-    }
-
-    private func deleteAllPhotosPin(completion: @escaping () -> Void) {
-        if let results = fetchedResultsController?.fetchedObjects {
-            results.forEach{ viewContext.delete($0) }
-            viewContext.refreshAllObjects()
-            
-            do {
-                try viewContext.save()
-            } catch {
-                print(error)
-            }
         }
     }
 }
@@ -165,3 +160,20 @@ extension PhotoAlbumViewController: PhotoAlbumViewDelegate {
     }
 }
 
+extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
+    func controller(
+        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
+        didChange anObject: Any,
+        at indexPath: IndexPath?,
+        for type: NSFetchedResultsChangeType,
+        newIndexPath: IndexPath?
+    ) {
+        switch type {
+            case .delete:
+                guard let indexPath else { return }
+                photoAlbumView.deletePhotoOnCollection(indexPath: indexPath)
+            default:
+                break
+        }
+    }
+}
