@@ -96,6 +96,8 @@ class MapViewController: UIViewController {
         navigationController?.pushViewController(photoAlbumVC, animated: true)
     }
 
+    // MARK: - Core Data Manipulation
+
     private func saveContext() {
         do {
             try DataController.shared.viewContext.save()

@@ -104,6 +104,8 @@ class PhotoAlbumViewController: UIViewController {
         }
     }
 
+    // MARK: - Core Data Manipulation
+
     private func deleteAllPhotosPin(completion: @escaping () -> Void) {
         if let results = fetchedResultsController?.fetchedObjects {
             for photoToDelete in results {
@@ -156,24 +158,6 @@ extension PhotoAlbumViewController: PhotoAlbumViewDelegate {
                 }
             }
             saveContext()
-        }
-    }
-}
-
-extension PhotoAlbumViewController: NSFetchedResultsControllerDelegate {
-    func controller(
-        _ controller: NSFetchedResultsController<NSFetchRequestResult>,
-        didChange anObject: Any,
-        at indexPath: IndexPath?,
-        for type: NSFetchedResultsChangeType,
-        newIndexPath: IndexPath?
-    ) {
-        switch type {
-            case .delete:
-                guard let indexPath else { return }
-                photoAlbumView.deletePhotoOnCollection(indexPath: indexPath)
-            default:
-                break
         }
     }
 }
