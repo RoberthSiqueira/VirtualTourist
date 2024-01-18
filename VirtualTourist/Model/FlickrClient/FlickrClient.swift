@@ -42,7 +42,7 @@ class FlickrClient {
     }
 
     func getAlbum(lat: Double, long: Double, isNewCollection: Bool, completion: @escaping ([Photo], Error?) -> Void) {
-        currentPage = isNewCollection ? currentPage + 1 : currentPage
+        currentPage = isNewCollection && pages > .zero ? Int.random(in: 1...pages) : currentPage
         getRequest(url: Endpoints.getAlbum(lat: lat, lon: long, page: currentPage).url, responseType: AlbumResponse.self) { [weak self] result in
             switch result {
                 case .success(let album):
